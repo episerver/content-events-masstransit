@@ -1,0 +1,30 @@
+﻿<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Optimizely.CMS.MassTransit.Events</id>
+    <version>$Version$</version>
+    <authors>Optimizely</authors>
+    <owners>Optimizely</owners>
+    <projectUrl>https://www.optimizely.com/products/dxp</projectUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <license type="file">LICENSE.txt</license>
+    <summary>Mass transit event provider.</summary>
+    <description>
+      Mass transit event provider
+    </description>
+    <copyright>Copyright Optimizely $Year$</copyright>
+    <tags>Optimizely MassTransit Events</tags>
+    <dependencies>
+      <group targetFramework="net5.0">
+        <dependency id="EPiServer.CMS.AspNetCore" version="[$cmsVersion$,$cmsNextMajorVersion$)" />
+        <dependency id="MassTransit.AspNetCore" version="[7.2.3,8)" />
+        <dependency id="MassTransit.Extensions.DependencyInjection" version="[7.2.3,8)" />
+        <dependency id="MassTransit.RabbitMQ" version="[7.2.3,8)" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="src\Optimizely.CMS.MassTransit.Events\license.txt" target="" />
+    <file src="src\Optimizely.CMS.MassTransit.Events\bin\$Configuration$\net5.0\Optimizely.CMS.MassTransit.Events.dll" target="lib\net5.0" />
+  </files>
+</package>

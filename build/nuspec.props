@@ -1,0 +1,25 @@
+<Project>
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <NuspecBasePath>$(ProjectDir)..\..\</NuspecBasePath>
+    <PackageVersion Condition=" '$(PackageVersion)' == '' ">$(VersionPrefix)$(VersionSuffix)</PackageVersion>
+    <NuspecProperties>Configuration=$(Configuration);Version=$(PackageVersion);cmsVersion=$(CmsVersion);cmsNextMajorVersion=$(CmsNextMajorVersion);</NuspecProperties>
+    <PackageOutputPath>$(SolutionDir)artifacts\packages\</PackageOutputPath>
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);GenerateLicenseFiles</TargetsForTfmSpecificContentInPackage>
+    <LicenseFiles>$(SolutionDir)build\licenses\NO-THIRD-PARTY-LICENSES.txt</LicenseFiles>
+    <LicenseTemplate>$(SolutionDir)build\licenses\LICENSE.txt.template</LicenseTemplate>
+  </PropertyGroup>
+
+  <Target Name="GenerateLicenseFiles"  >
+    <ItemGroup>
+      <LicenseFiles Include="$(LicenseTemplate)" Condition="'$(LicenseTemplate)' != ''" />
+      <LicenseFiles Include="$(LicenseFiles)" Condition="'$(LicenseFiles)' != ''"/>
+      <LicenseContents Include="$([System.IO.File]::ReadAllText(%(LicenseFiles.Identity)))" Condition="'$(LicenseFiles)' != ''"/>
+    </ItemGroup>
+    <WriteLinesToFile File="license.txt" Lines="@(LicenseContents->'%(Identity)%0D%0A')" Overwrite="true" />
+  </Target>
+
+  <Target Name="Cleanup" AfterTargets="GenerateNuspec">
+    <Delete Files="license.txt"/>
+  </Target>
+</Project>
