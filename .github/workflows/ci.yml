@@ -17,6 +17,7 @@ jobs:
       versionSuffix: -ci-${{ github.RUN_NUMBER }}
     steps:
       - uses: actions/checkout@v2
+      
       # Not needed yet
       # - uses: ./.github/actions/install-sql-localdb
       - name: Restore
@@ -38,11 +39,13 @@ jobs:
     name: Publish
     needs: build_test_pack
     runs-on: windows-latest
+    env:
+      NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
     steps:
       - name: Download artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: packages
-      - name: Publish packages
-        # run: dotnet nuget push *.nupkg --source 'nuget.example.com'
+      - uses: actions/download-artifact@v2
         run: echo 'Packages are not published at the moment, they can however be downloaded from the artifacts'
+      - name: Publish packages
+      - uses: actions/setup-dotnet@v1
+        run: dotnet nuget push artifacts/packages/*.nupkg --source 'https://nuget.pkg.github.com/episerver/index.json'
+        
