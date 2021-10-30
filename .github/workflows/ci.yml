@@ -14,7 +14,7 @@ jobs:
     runs-on: windows-latest
     env:
       buildConfiguration: release
-      versionSuffix: ci-${{ github.RUN_NUMBER }}
+      versionSuffix: -ci-${{ github.RUN_NUMBER }}
     steps:
       - uses: actions/checkout@v2
       # Not needed yet
