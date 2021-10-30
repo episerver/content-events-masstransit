@@ -16,7 +16,7 @@
     <tags>Optimizely MassTransit Events</tags>
     <dependencies>
       <group targetFramework="net5.0">
-        <dependency id="EPiServer.CMS.AspNetCore" version="[$cmsVersion$,$cmsNextMajorVersion$)" />
+        <dependency id="EPiServer.CMS.AspNetCore" version="[12.0.3,13)" />
         <dependency id="MassTransit.AspNetCore" version="[7.2.3,8)" />
         <dependency id="MassTransit.Extensions.DependencyInjection" version="[7.2.3,8)" />
         <dependency id="MassTransit.RabbitMQ" version="[7.2.3,8)" />
