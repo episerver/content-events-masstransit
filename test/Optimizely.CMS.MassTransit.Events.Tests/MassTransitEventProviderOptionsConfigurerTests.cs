@@ -1,10 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Optimizely.CMS.MassTransit.Events.Tests
@@ -28,7 +23,6 @@ namespace Optimizely.CMS.MassTransit.Events.Tests
             _configuration.Setup(x => x.GetSection("ConnectionStrings")["OptimizelyMassTransitEvents"]).Returns("amqp://guest:guest@localhost:5672");
             _subject.PostConfigure("test", _options);
             Assert.Equal("amqp://guest:guest@localhost:5672", _options.ConnectionString);
-
         }
     }
 }
