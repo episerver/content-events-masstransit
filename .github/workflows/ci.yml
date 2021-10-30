@@ -16,7 +16,15 @@ jobs:
       buildConfiguration: release
       versionSuffix: -ci-${{ github.RUN_NUMBER }}
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v1
+
+      - name: Setup .NET Core @ Latest
+        uses: actions/setup-dotnet@v1
+        with:
+          source-url: https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
       
       # Not needed yet
       # - uses: ./.github/actions/install-sql-localdb
@@ -27,25 +35,8 @@ jobs:
       - name: Test
         run: dotnet test --no-build --configuration $env:buildConfiguration
       - name: Pack
-        run: dotnet pack --no-build --no-restore --configuration $env:buildConfiguration --version-suffix $env:versionSuffix
-      - name: Archive packages
-        uses: actions/upload-artifact@v2
-        with:
-          name: packages
-          path: artifacts/packages/*.nupkg
-          retention-days: 2
-
-  publish:
-    name: Publish
-    needs: build_test_pack
-    runs-on: windows-latest
-    env:
-      NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-    steps:
-      - name: Download artifacts
-      - uses: actions/download-artifact@v2
-        run: echo 'Packages are not published at the moment, they can however be downloaded from the artifacts'
+        run: dotnet pack --no-build --no-restore --configuration $env:buildConfiguration --version-suffix $env:versionSuffix -o out
       - name: Publish packages
-      - uses: actions/setup-dotnet@v1
-        run: dotnet nuget push artifacts/packages/*.nupkg --source 'https://nuget.pkg.github.com/episerver/index.json'
+        run: dotnet nuget push **/*.nupkg --skip-duplicate -k ${{ secrets.GITHUB_TOKEN }}
+
         
