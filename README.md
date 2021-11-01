@@ -1,5 +1,11 @@
 # Optimizely.CMS.MassTransit.Events
 
+## Introduction
+
+This provider allows for remote events processed.  By default this provider uses RabbitMQ as the default transport provider.  If you would like to use a different transport prvoider you will need to install the relevent nuget package and configure the transport in the last parameter of the AddMassTransitEventProvider extension method.  Please see the following link for more details https://masstransit-project.com/usage/transports/
+
+## Configuration
+
 To configure the mass transit event prvovider through configuration, you have a couple options.  
 You can set the connection string OptimizelyMassTransitEvents or you can configure the connection string.
 
