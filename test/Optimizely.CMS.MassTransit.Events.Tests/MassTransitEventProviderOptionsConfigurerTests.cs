@@ -24,5 +24,19 @@ namespace Optimizely.CMS.MassTransit.Events.Tests
             _subject.PostConfigure("test", _options);
             Assert.Equal("amqp://guest:guest@localhost:5672", _options.ConnectionString);
         }
+
+        [Fact]
+        public void PostConfigure_WhenExchangeNameIsNullShouldSet()
+        {
+            _subject.PostConfigure("test", _options);
+            Assert.Equal("optimizely.fanout.siteevents", _options.ExchangeName);
+        }
+
+        [Fact]
+        public void PostConfigure_WhenQueueNameIsNullShouldSet()
+        {
+            _subject.PostConfigure("test", _options);
+            Assert.Equal("optimizely.queues.siteevents", _options.QueueName);
+        }
     }
 }

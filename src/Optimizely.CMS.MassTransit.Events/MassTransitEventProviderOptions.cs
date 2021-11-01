@@ -23,20 +23,9 @@ namespace Optimizely.CMS.MassTransit.Events
         /// </summary>
         public string QueueName { get; set; }
 
-
-        /// <summary>
-        /// Indicates if the Service Bus Topic should be created with partitioning enabled.
-        /// </summary>
-        public bool EnablePartitioning { get; set; } = true;
-
-        /// <summary>
-        /// Indicates the size in MB of the Service Bus Topic
-        /// </summary>
-        public int TopicSize { get; set; } = 5120;
-
         /// <summary>
         /// Name of provider.
         /// </summary>
-        public string Name { get; set; } = "rabbitmq";
+        public string Name { get; set; } = "MassTransit";
     }
 }
