@@ -1,10 +1,10 @@
+using System;
+using System.Text;
+using System.Threading;
 using EPiServer.Events;
 using GreenPipes;
 using MassTransit;
 using Moq;
-using System;
-using System.Text;
-using System.Threading;
 using Xunit;
 
 namespace Optimizely.CMS.MassTransit.Events.Tests
@@ -18,9 +18,11 @@ namespace Optimizely.CMS.MassTransit.Events.Tests
         public MassTransitEventProviderTests()
         {
             _publishEndpoint = new Mock<IPublishEndpoint>();
-            _massTransitEventProviderOptions = new MassTransitEventProviderOptions();
-            _massTransitEventProviderOptions.ExchangeName = "exchange";
-            _massTransitEventProviderOptions.QueueName = "queue";
+            _massTransitEventProviderOptions = new MassTransitEventProviderOptions
+            {
+                ExchangeName = "exchange",
+                QueueName = "queue"
+            };
             _subject = new MassTransitEventProvider(_massTransitEventProviderOptions, _publishEndpoint.Object);
         }
 

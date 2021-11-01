@@ -1,7 +1,7 @@
-﻿using EPiServer.Events;
-using MassTransit;
 using System;
 using System.Threading.Tasks;
+using EPiServer.Events;
+using MassTransit;
 
 namespace Optimizely.CMS.MassTransit.Events
 {
@@ -10,7 +10,7 @@ namespace Optimizely.CMS.MassTransit.Events
     /// </summary>
     public class MassTransitEventProvider : EPiServer.Events.Providers.EventProvider
     {
-        private readonly IPublishEndpoint _publishEndpoint; 
+        private readonly IPublishEndpoint _publishEndpoint;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MassTransitEventProvider"/> class.

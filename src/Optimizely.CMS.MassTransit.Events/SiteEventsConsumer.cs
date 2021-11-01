@@ -1,9 +1,9 @@
-﻿using EPiServer.Events;
+using System;
+using System.Threading.Tasks;
+using EPiServer.Events;
 using EPiServer.ServiceLocation;
 using MassTransit;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Threading.Tasks;
 
 namespace Optimizely.CMS.MassTransit.Events
 {
@@ -20,7 +20,7 @@ namespace Optimizely.CMS.MassTransit.Events
             _logger = ServiceLocator.Current.GetInstance<ILogger<SiteEventsConsumer>>();
             _massTransitEventProvider = ServiceLocator.Current.GetInstance<MassTransitEventProvider>();
         }
-        
+
         public async Task Consume(ConsumeContext<EventMessage> context)
         {
             try

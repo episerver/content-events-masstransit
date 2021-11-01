@@ -1,10 +1,10 @@
-﻿using EPiServer.Events;
+using System;
+using EPiServer.Events;
 using MassTransit;
 using MassTransit.ExtensionsDependencyInjectionIntegration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Optimizely.CMS.MassTransit.Events;
-using System;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -18,26 +18,20 @@ namespace Microsoft.Extensions.DependencyInjection
         /// </summary>
         /// <param name="services">The services.</param>
         /// <param name="configureOptions">Optional action to configure blob provider</param>
-        public static IServiceCollection AddMassTransitEventProvider(this IServiceCollection services, 
+        public static IServiceCollection AddMassTransitEventProvider(this IServiceCollection services,
             Action<MassTransitEventProviderOptions> configureOptions = null,
             Action<IServiceCollectionBusConfigurator> configureBus = null)
         {
             services.AddEventProvider<MassTransitEventProvider>();
 
-            if (configureOptions is object)
+            if (configureOptions is not null)
             {
                 services.Configure(configureOptions);
             }
 
             services.TryAddEnumerable(ServiceDescriptor.Singleton<IPostConfigureOptions<MassTransitEventProviderOptions>, MassTransitEventProviderOptionsConfigurer>());
 
-            services.AddMassTransit(x =>
-            {
-                if (configureBus is object)
-                {
-                    configureBus?.Invoke(x);
-                }
-            });
+            services.AddMassTransit(x => configureBus?.Invoke(x));
 
             services.AddMassTransitHostedService();
             return services;
