@@ -13,7 +13,7 @@ jobs:
     runs-on: windows-latest
     env:
       buildConfiguration: release
-      versionSuffix: ${{ github.ref == 'develop' && '-pre-' ||  '-ci-' }}${{github.RUN_NUMBER }}
+      versionSuffix: ${{ github.ref == 'refs/heads/develop' && '-pre-' ||  '-ci-' }}${{github.RUN_NUMBER }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v1
@@ -29,18 +29,18 @@ jobs:
       - name: Restore
         run: dotnet restore
       - name: Build (Release version)
-        if:  ${{ github.ref == 'main' }}
+        if:  ${{ github.ref == 'refs/heads/main' }}
         run: dotnet build --no-restore --configuration $env:buildConfiguration 
       - name: Build (Pre-Release version)
-        if:  ${{ github.ref != 'main' }}
+        if:  ${{ github.ref != 'refs/heads/main' }}
         run: dotnet build --no-restore --configuration $env:buildConfiguration --version-suffix $env:versionSuffix
       - name: Test
         run: dotnet test --no-build --configuration $env:buildConfiguration
       - name: Pack (Release version)
-        if:  ${{ github.ref == 'main' }}
+        if:  ${{ github.ref == 'refs/heads/main' }}
         run: dotnet pack --no-build --no-restore --configuration $env:buildConfiguration -o out
       - name: Pack (Pre-Release version)
-        if:  ${{ github.ref != 'main' }}
+        if:  ${{ github.ref != 'refs/heads/main' }}
         run: dotnet pack --no-build --no-restore --configuration $env:buildConfiguration --version-suffix $env:versionSuffix -o out
       - name: Publish packages
         run: dotnet nuget push **/*.nupkg --skip-duplicate -k ${{ secrets.GITHUB_TOKEN }}
