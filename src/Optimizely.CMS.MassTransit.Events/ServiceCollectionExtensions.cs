@@ -9,7 +9,7 @@ using Optimizely.CMS.MassTransit.Events;
 namespace Microsoft.Extensions.DependencyInjection
 {
     /// <summary>
-    /// ss
+    /// Configures MassTransit event provider and services
     /// </summary>
     public static class ServiceCollectionExtensions
     {
@@ -18,6 +18,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// </summary>
         /// <param name="services">The services.</param>
         /// <param name="configureOptions">Optional action to configure blob provider</param>
+        /// <param name="configureBus">Optional action to configure the bus</param>
         public static IServiceCollection AddMassTransitEventProvider(this IServiceCollection services,
             Action<MassTransitEventProviderOptions> configureOptions = null,
             Action<IServiceCollectionBusConfigurator> configureBus = null)
@@ -37,6 +38,10 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
+        /// <summary>
+        /// Adds MQ transport to the event provider.
+        /// </summary>
+        /// <param name="busRegistrationConfigurator"></param>
         public static void AddRabbitMqTransport(this IBusRegistrationConfigurator busRegistrationConfigurator)
         {
             busRegistrationConfigurator.UsingRabbitMq((context, cfg) =>

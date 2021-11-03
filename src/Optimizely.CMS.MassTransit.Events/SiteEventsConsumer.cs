@@ -7,6 +7,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Optimizely.CMS.MassTransit.Events
 {
+    /// <summary>
+    /// Consumer for EventMessage on the bus
+    /// </summary>
     public class SiteEventsConsumer : IConsumer<EventMessage>
     {
         private readonly ILogger _logger;
@@ -21,6 +24,11 @@ namespace Optimizely.CMS.MassTransit.Events
             _massTransitEventProvider = ServiceLocator.Current.GetInstance<MassTransitEventProvider>();
         }
 
+        /// <summary>
+        /// Handles when a message is received from the bus.
+        /// </summary>
+        /// <param name="context">The conetxt</param>
+        /// <returns>A <see cref="Task"/>.</returns>
         public async Task Consume(ConsumeContext<EventMessage> context)
         {
             try

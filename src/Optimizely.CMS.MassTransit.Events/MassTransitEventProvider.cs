@@ -15,6 +15,8 @@ namespace Optimizely.CMS.MassTransit.Events
         /// <summary>
         /// Initializes a new instance of the <see cref="MassTransitEventProvider"/> class.
         /// </summary>
+        /// <param name="options">The options</param>
+        /// <param name="publishEndpoint">The publish endpoint.</param>
         public MassTransitEventProvider(MassTransitEventProviderOptions options,
             IPublishEndpoint publishEndpoint)
         {
@@ -22,11 +24,18 @@ namespace Optimizely.CMS.MassTransit.Events
             _publishEndpoint = publishEndpoint;
         }
 
+        /// <summary>
+        /// Unique name for the queue name.
+        /// </summary>
         public static string UniqueServerName { get; } = Environment.MachineName.Replace('/', '_').Replace(':', '_') + Guid.NewGuid().ToString("N");
 
         /// <inheritdoc/>
         public override bool ValidateMessageIntegrity => false;
 
+        /// <summary>
+        /// Method to raise OnMessageReeceived event.
+        /// </summary>
+        /// <param name="messageEventArgs">The message event args.</param>
         public void RaiseOnMessageReceived(EventMessageEventArgs messageEventArgs) => OnMessageReceived(messageEventArgs);
 
         /// <inheritdoc/>
@@ -41,10 +50,7 @@ namespace Optimizely.CMS.MassTransit.Events
         /// <inheritdoc/>
         public override void SendMessage(EventMessage message)
         {
-            _publishEndpoint.Publish(message, (msg) =>
-            {
-                msg.Headers.Set("AppId", UniqueServerName);
-            });
+            _publishEndpoint.Publish(message, (msg) => msg.Headers.Set("AppId", UniqueServerName));
         }
     }
 }
