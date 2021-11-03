@@ -1,12 +1,15 @@
-﻿using EPiServer.Events;
+using System;
+using System.Threading.Tasks;
+using EPiServer.Events;
 using EPiServer.ServiceLocation;
 using MassTransit;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Threading.Tasks;
 
 namespace Optimizely.CMS.MassTransit.Events
 {
+    /// <summary>
+    /// Consumer for EventMessage on the bus
+    /// </summary>
     public class SiteEventsConsumer : IConsumer<EventMessage>
     {
         private readonly ILogger _logger;
@@ -20,7 +23,12 @@ namespace Optimizely.CMS.MassTransit.Events
             _logger = ServiceLocator.Current.GetInstance<ILogger<SiteEventsConsumer>>();
             _massTransitEventProvider = ServiceLocator.Current.GetInstance<MassTransitEventProvider>();
         }
-        
+
+        /// <summary>
+        /// Handles when a message is received from the bus.
+        /// </summary>
+        /// <param name="context">The conetxt</param>
+        /// <returns>A <see cref="Task"/>.</returns>
         public async Task Consume(ConsumeContext<EventMessage> context)
         {
             try

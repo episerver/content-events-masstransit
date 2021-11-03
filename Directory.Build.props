@@ -1,0 +1,16 @@
+<Project>
+  <Import Project="build\version.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarnOnPackingNonPackableProject>false</WarnOnPackingNonPackableProject>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' != 'Release' ">
+    <WarningsNotAsErrors>CS1591;CS1573</WarningsNotAsErrors>
+  </PropertyGroup>
+</Project>

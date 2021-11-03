@@ -3,10 +3,11 @@ name: Continuous integration
 on:
   push:
     branches:
-      - '*'
+      - 'main'
   pull_request:
     branches:
-     - '*'
+      - '*'
+      - '!main'
 jobs:
   build_test_pack:
     name: Build, test & pack
@@ -45,4 +46,3 @@ jobs:
       - name: Publish packages
         run: dotnet nuget push **/*.nupkg --skip-duplicate -k ${{ secrets.GITHUB_TOKEN }}
 
-        

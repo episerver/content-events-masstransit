@@ -1,15 +1,15 @@
-﻿using EPiServer.Events;
+using System;
+using EPiServer.Events;
 using MassTransit;
 using MassTransit.ExtensionsDependencyInjectionIntegration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Optimizely.CMS.MassTransit.Events;
-using System;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
     /// <summary>
-    /// ss
+    /// Configures MassTransit event provider and services
     /// </summary>
     public static class ServiceCollectionExtensions
     {
@@ -18,31 +18,30 @@ namespace Microsoft.Extensions.DependencyInjection
         /// </summary>
         /// <param name="services">The services.</param>
         /// <param name="configureOptions">Optional action to configure blob provider</param>
-        public static IServiceCollection AddMassTransitEventProvider(this IServiceCollection services, 
+        /// <param name="configureBus">Optional action to configure the bus</param>
+        public static IServiceCollection AddMassTransitEventProvider(this IServiceCollection services,
             Action<MassTransitEventProviderOptions> configureOptions = null,
             Action<IServiceCollectionBusConfigurator> configureBus = null)
         {
             services.AddEventProvider<MassTransitEventProvider>();
 
-            if (configureOptions is object)
+            if (configureOptions is not null)
             {
                 services.Configure(configureOptions);
             }
 
             services.TryAddEnumerable(ServiceDescriptor.Singleton<IPostConfigureOptions<MassTransitEventProviderOptions>, MassTransitEventProviderOptionsConfigurer>());
 
-            services.AddMassTransit(x =>
-            {
-                if (configureBus is object)
-                {
-                    configureBus?.Invoke(x);
-                }
-            });
+            services.AddMassTransit(x => configureBus?.Invoke(x));
 
             services.AddMassTransitHostedService();
             return services;
         }
 
+        /// <summary>
+        /// Adds MQ transport to the event provider.
+        /// </summary>
+        /// <param name="busRegistrationConfigurator"></param>
         public static void AddRabbitMqTransport(this IBusRegistrationConfigurator busRegistrationConfigurator)
         {
             busRegistrationConfigurator.UsingRabbitMq((context, cfg) =>
