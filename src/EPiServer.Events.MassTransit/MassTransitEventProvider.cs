@@ -1,14 +1,13 @@
 using System;
 using System.Threading.Tasks;
-using EPiServer.Events;
 using MassTransit;
 
-namespace Optimizely.CMS.MassTransit.Events
+namespace EPiServer.Events.MassTransit
 {
     /// <summary>
-    /// <see cref="EPiServer.Events.Providers.EventProvider"/> that uses Azure ServiceBus for exchanging messages between sites.
+    /// <see cref="Providers.EventProvider"/> that uses MassTransit for exchanging messages between sites.
     /// </summary>
-    public class MassTransitEventProvider : EPiServer.Events.Providers.EventProvider
+    public class MassTransitEventProvider : Providers.EventProvider
     {
         private readonly IPublishEndpoint _publishEndpoint;
 
@@ -41,16 +40,24 @@ namespace Optimizely.CMS.MassTransit.Events
         /// <inheritdoc/>
         public override Task InitializeAsync()
         {
+
             return Task.CompletedTask;
         }
 
         /// <inheritdoc/>
-        public override void Uninitialize() { }
+        public override void Uninitialize()
+        {
+
+        }
 
         /// <inheritdoc/>
         public override void SendMessage(EventMessage message)
         {
-            _publishEndpoint.Publish(message, (msg) => msg.Headers.Set("AppId", UniqueServerName));
+            _publishEndpoint.Publish(message, (msg) =>
+            {
+                msg.TimeToLive = TimeSpan.FromMinutes(30);
+                msg.Headers.Set("AppId", UniqueServerName);
+            });
         }
     }
 }

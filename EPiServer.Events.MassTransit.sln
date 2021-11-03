@@ -10,9 +10,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{904B23C7
 		build\version.props = build\version.props
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Optimizely.CMS.MassTransit.Events", "src\Optimizely.CMS.MassTransit.Events\Optimizely.CMS.MassTransit.Events.csproj", "{5833BB6C-ADA1-48FA-9604-43987598A151}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EPiServer.Events.MassTransit", "src\EPiServer.Events.MassTransit\EPiServer.Events.MassTransit.csproj", "{5833BB6C-ADA1-48FA-9604-43987598A151}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Optimizely.CMS.MassTransit.Events.Tests", "test\Optimizely.CMS.MassTransit.Events.Tests\Optimizely.CMS.MassTransit.Events.Tests.csproj", "{EDEEB546-68A3-4F08-8FB6-D7952D43B08B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EPiServer.CMS.MassTransit.Events.Tests", "test\EPiServer.Events.MassTransit.Tests\EPiServer.Events.MassTransit.Tests.csproj", "{EDEEB546-68A3-4F08-8FB6-D7952D43B08B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "global", "global", "{18FE4CCF-FA46-42C7-8C03-4F28827DE69C}"
 	ProjectSection(SolutionItems) = preProject

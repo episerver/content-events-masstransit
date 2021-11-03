@@ -1,11 +1,10 @@
 using System;
 using System.Threading.Tasks;
-using EPiServer.Events;
 using EPiServer.ServiceLocation;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 
-namespace Optimizely.CMS.MassTransit.Events
+namespace EPiServer.Events.MassTransit
 {
     /// <summary>
     /// Consumer for EventMessage on the bus
@@ -33,12 +32,6 @@ namespace Optimizely.CMS.MassTransit.Events
         {
             try
             {
-                if (context.Headers.Get<string>("AppId") == MassTransitEventProvider.UniqueServerName)
-                {
-                    _logger.LogDebug("Message processor received it's own message, message will be ignored.");
-                    return;
-                }
-
                 _massTransitEventProvider.RaiseOnMessageReceived(new EventMessageEventArgs(context.Message));
             }
             catch (Exception e)
