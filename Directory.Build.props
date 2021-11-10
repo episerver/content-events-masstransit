@@ -13,4 +13,12 @@
   <PropertyGroup Condition=" '$(Configuration)' != 'Release' ">
     <WarningsNotAsErrors>CS1591;CS1573</WarningsNotAsErrors>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Assigns SolutionDir when building individual projects -->
+    <SolutionDir Condition=" '$(SolutionDir)' == '' ">$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)\'))</SolutionDir>
+    <BuildDirectory>$(MSBuildThisFileDirectory)build\</BuildDirectory>
+    <ArtifactsDirectory>$(SolutionDir)artifacts\</ArtifactsDirectory>
+  </PropertyGroup>
+
 </Project>
