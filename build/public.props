@@ -1,6 +1,11 @@
 <Project>
+
   <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IsPackable>true</IsPackable>
+    <DebugType>embedded</DebugType>
+    <IncludeSymbols>false</IncludeSymbols>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <PackageOutputPath>$(ArtifactsDirectory)packages\</PackageOutputPath>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <PackageTags>EPiServer MassTransit Events</PackageTags>
@@ -10,32 +15,26 @@
     <PackageProjectUrl>https://www.optimizely.com/products/dxp/</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/episerver/content-events-masstransit.git</RepositoryUrl>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseFile>license.txt</PackageLicenseFile>
-    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);IncludeLicenseFile</TargetsForTfmSpecificContentInPackage>
     <LicenseFiles>$(BuildDirectory)licenses\NO-THIRD-PARTY-LICENSES.txt</LicenseFiles>
     <LicenseTemplate>$(BuildDirectory)licenses\LICENSE.txt.template</LicenseTemplate>
-    <IntermediateLicenseFile>$(BaseIntermediateOutputPath)license.txt</IntermediateLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
     <None Include="$(BuildDirectory)icon.png" Pack="true" PackagePath="" Visible="false" />
   </ItemGroup>
 
-  <Target Name="GenerateLicenseFile" Inputs="$(LicenseTemplate);$(LicenseFiles)" Outputs="$(IntermediateLicenseFile)">
-    <ItemGroup>
-      <LicenseFiles Include="$(LicenseTemplate)" Condition="'$(LicenseTemplate)' != ''" />
-      <LicenseFiles Include="$(LicenseFiles)" Condition="'$(LicenseFiles)' != ''"/>
-      <LicenseContents Include="$([System.IO.File]::ReadAllText(%(LicenseFiles.Identity)))" Condition="'$(LicenseFiles)' != ''"/>
-    </ItemGroup>
-    <Message Text="Updating package license file..." Importance="high" />
-    <WriteLinesToFile File="$(IntermediateLicenseFile)" Lines="@(LicenseContents->'%(Identity)%0D%0A')" Overwrite="true" />
-  </Target>
+  <!-- Make internal code visible to Test project and Moq -->
+  <ItemGroup>
+    <InternalsVisibleTo Include="$(AssemblyName).Tests" />
+    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+  </ItemGroup>
 
-  <Target Name="IncludeLicenseFile" DependsOnTargets="GenerateLicenseFile">
-    <ItemGroup>
-      <TfmSpecificPackageFile Include="$(IntermediateLicenseFile)" PackagePath="" />
-    </ItemGroup>
-  </Target>
+  <!-- Setup SourceLink -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="all"/>
+  </ItemGroup>
 
 </Project>
