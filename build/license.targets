@@ -1,0 +1,24 @@
+<Project>
+
+  <PropertyGroup>
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);IncludeLicenseFile</TargetsForTfmSpecificContentInPackage>
+    <IntermediateLicenseFile>$(BaseIntermediateOutputPath)$(PackageLicenseFile)</IntermediateLicenseFile>
+  </PropertyGroup>
+
+  <Target Name="GenerateLicenseFile" Inputs="$(LicenseTemplate);$(LicenseFiles)" Outputs="$(IntermediateLicenseFile)">
+    <ItemGroup>
+      <LicenseFiles Include="$(LicenseTemplate)" Condition="'$(LicenseTemplate)' != ''" />
+      <LicenseFiles Include="$(LicenseFiles)" Condition="'$(LicenseFiles)' != ''"/>
+      <LicenseContents Include="$([System.IO.File]::ReadAllText(%(LicenseFiles.Identity)))" Condition="'$(LicenseFiles)' != ''"/>
+    </ItemGroup>
+    <Message Text="Updating package license file..." Importance="high" />
+    <WriteLinesToFile File="$(IntermediateLicenseFile)" Lines="@(LicenseContents->'%(Identity)%0D%0A')" Overwrite="true" />
+  </Target>
+
+  <Target Name="IncludeLicenseFile" DependsOnTargets="GenerateLicenseFile" Condition=" '$(PackageLicenseFile)' != '' ">
+    <ItemGroup>
+      <TfmSpecificPackageFile Include="$(IntermediateLicenseFile)" PackagePath="" />
+    </ItemGroup>
+  </Target>
+
+</Project>
