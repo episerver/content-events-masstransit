@@ -1,7 +1,7 @@
-﻿<?xml version="1.0"?>
+<?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <id>Optimizely.CMS.MassTransit.Events</id>
+    <id>EPiServer.Events.MassTransit</id>
     <version>$Version$</version>
     <authors>Optimizely</authors>
     <owners>Optimizely</owners>
@@ -13,8 +13,8 @@
       Mass transit event provider
     </description>
     <copyright>Copyright Optimizely $Year$</copyright>
-    <tags>Optimizely MassTransit Events</tags>
-    <repository type="git" url="https://github.com/episerver/Optimizely.CMS.MassTransit.Events.git"></repository>
+    <tags>EPiServer MassTransit Events</tags>
+    <repository type="git" url="https://github.com/episerver/content-events-masstransit.git"></repository>
     <dependencies>
       <group targetFramework="net5.0">
         <dependency id="EPiServer.CMS.AspNetCore" version="[12.0.3,13)" />
@@ -25,7 +25,7 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="src\Optimizely.CMS.MassTransit.Events\license.txt" target="" />
-    <file src="src\Optimizely.CMS.MassTransit.Events\bin\$Configuration$\net5.0\Optimizely.CMS.MassTransit.Events.dll" target="lib\net5.0" />
+    <file src="src\EPiServer.Events.MassTransit\license.txt" target="" />
+    <file src="src\EPiServer.Events.MassTransit\bin\$Configuration$\net5.0\EPiServer.Events.MassTransit.dll" target="lib\net5.0" />
   </files>
 </package>

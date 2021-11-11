@@ -1,10 +1,11 @@
 using System;
 using EPiServer.Events;
+using EPiServer.Events.MassTransit;
 using MassTransit;
 using MassTransit.ExtensionsDependencyInjectionIntegration;
+using MassTransit.Serialization;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
-using Optimizely.CMS.MassTransit.Events;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -49,12 +50,46 @@ namespace Microsoft.Extensions.DependencyInjection
                 var options = context.GetService<MassTransitEventProviderOptions>();
                 cfg.Host(new Uri(options.ConnectionString));
                 cfg.Message<EventMessage>(x => x.SetEntityName(options.ExchangeName));
-                cfg.ReceiveEndpoint(options.QueueName, e =>
+                cfg.ReceiveEndpoint(MassTransitEventProvider.UniqueServerName, e =>
                 {
-                    e.Bind(options.ExchangeName);
+                    e.ClearMessageDeserializers();
+                    e.UseDataContractBinarySerializer(context.GetService<EventsServiceKnownTypesLookup>());
+                    e.AutoDelete = true;
+                    e.PrefetchCount = options.PrefetchCount;
+                    e.Durable = false;
+                    e.Bind(options.ExchangeName, x =>
+                    {
+                        x.Durable = true;
+                        x.AutoDelete = false;
+                    });
+                    e.UseConsumeFilter(typeof(SiteConsumeFilter<>), context);
                     e.Consumer<SiteEventsConsumer>();
                 });
             });
+        }
+
+        /// <summary>
+        /// Adds data contract binary serializer
+        /// </summary>
+        /// <param name="configurator">The configurator</param>
+        /// <param name="typesLookup">The types lookup</param>
+        public static void UseDataContractBinarySerializer(this IBusFactoryConfigurator configurator, EventsServiceKnownTypesLookup typesLookup)
+        {
+            var serializer = new DataContractBinarySerializer(typesLookup);
+            configurator.AddMessageDeserializer(JsonMessageSerializer.JsonContentType, () => serializer);
+            configurator.SetMessageSerializer(() => serializer);
+        }
+
+        /// <summary>
+        /// Adds data contract binary serializer
+        /// </summary>
+        /// <param name="configurator">The configurator</param>
+        /// <param name="typesLookup">The types lookup</param>
+        public static void UseDataContractBinarySerializer(this IReceiveEndpointConfigurator configurator, EventsServiceKnownTypesLookup typesLookup)
+        {
+            var serializer = new DataContractBinarySerializer(typesLookup);
+            configurator.AddMessageDeserializer(JsonMessageSerializer.JsonContentType, () => serializer);
+            configurator.SetMessageSerializer(() => serializer);
         }
     }
 }

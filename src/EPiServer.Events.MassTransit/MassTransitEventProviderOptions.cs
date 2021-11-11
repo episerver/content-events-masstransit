@@ -1,6 +1,6 @@
-﻿using EPiServer.ServiceLocation;
+using EPiServer.ServiceLocation;
 
-namespace Optimizely.CMS.MassTransit.Events
+namespace EPiServer.Events.MassTransit
 {
     /// <summary>
     /// Options for configuring a <see cref="MassTransitEventProvider"/>.
@@ -19,9 +19,9 @@ namespace Optimizely.CMS.MassTransit.Events
         public string ExchangeName { get; set; }
 
         /// <summary>
-        /// The queue name that should be used. Must adhere to RabbitMQ limitations.
+        /// The pre-fetch count for processing message..
         /// </summary>
-        public string QueueName { get; set; }
+        public ushort PrefetchCount { get; set; } = 100;
 
         /// <summary>
         /// Name of provider.
