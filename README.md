@@ -1,4 +1,4 @@
-# Optimizely.CMS.MassTransit.Events
+# EPiServer.Events.MassTransit
 
 ## Introduction
 
@@ -22,7 +22,7 @@ You can set the connection string OptimizelyMassTransitEvents or you can configu
 
 OR
 
-`The Exchnage Name and Queue Name are optional and will be set the defaults which are show here.`
+`The Exchnage Name is optional and will be set the default which is shown here.`
 
 ```
 {
@@ -30,7 +30,6 @@ OR
         "MassTransitEventProvider" : {
             "ConnectionString": "amqp://guest:guest@localhost:5672",
             "ExchangeName" : "optimizely.fanout.siteevents",
-            "QueueuName" : "optimizely.queues.siteevents"
         }
     }
 }
