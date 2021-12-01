@@ -32,12 +32,15 @@ namespace EPiServer.Events.MassTransit
         {
             try
             {
-                _massTransitEventProvider.RaiseOnMessageReceived(new EventMessageEventArgs(context.Message));
+                if (context.Headers.Get<string>("AppId") != MassTransitEventProvider.UniqueServerName)
+                {
+                    _massTransitEventProvider.RaiseOnMessageReceived(new EventMessageEventArgs(context.Message));
+                    await Task.CompletedTask.ConfigureAwait(false);
+                }
             }
             catch (Exception e)
             {
                 _logger.LogError("Failed deserialize event", e);
-                await Task.FromException(e);
             }
         }
     }

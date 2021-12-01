@@ -10,17 +10,21 @@ namespace EPiServer.Events.MassTransit
     public class MassTransitEventProvider : Providers.EventProvider
     {
         private readonly IPublishEndpoint _publishEndpoint;
+        private readonly DataContractBinarySerializer _dataContractBinarySerializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MassTransitEventProvider"/> class.
         /// </summary>
         /// <param name="options">The options</param>
         /// <param name="publishEndpoint">The publish endpoint.</param>
+        /// <param name="dataContractBinarySerializer">The serializer</param>
         public MassTransitEventProvider(MassTransitEventProviderOptions options,
-            IPublishEndpoint publishEndpoint)
+            IPublishEndpoint publishEndpoint,
+            DataContractBinarySerializer dataContractBinarySerializer)
         {
             Name = options.Name;
             _publishEndpoint = publishEndpoint;
+            _dataContractBinarySerializer = dataContractBinarySerializer;
         }
 
         /// <summary>
@@ -56,6 +60,7 @@ namespace EPiServer.Events.MassTransit
             _publishEndpoint.Publish(message, (msg) =>
             {
                 msg.TimeToLive = TimeSpan.FromMinutes(30);
+                msg.Serializer = _dataContractBinarySerializer;
                 msg.Headers.Set("AppId", UniqueServerName);
             });
         }

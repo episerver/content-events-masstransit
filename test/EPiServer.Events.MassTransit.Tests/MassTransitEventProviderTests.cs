@@ -42,7 +42,7 @@ namespace EPiServer.Events.MassTransit.Tests
             _testHarness.OnConfigureInMemoryBus += x =>
             {
                 x.ClearMessageDeserializers();
-                x.UseDataContractBinarySerializer(new EventsServiceKnownTypesLookup(scanner.Object));
+                x.UseDataContractBinarySerializer(new DataContractBinarySerializer(new EventsServiceKnownTypesLookup(scanner.Object)));
             };
             _siteEventsConsumer = _testHarness.Consumer<SiteEventsConsumer>(MassTransitEventProvider.UniqueServerName);
             _testHarness.Start().GetAwaiter().GetResult();

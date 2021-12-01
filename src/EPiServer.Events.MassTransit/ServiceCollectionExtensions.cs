@@ -1,9 +1,9 @@
 using System;
+using System.Net.Mime;
 using EPiServer.Events;
 using EPiServer.Events.MassTransit;
 using MassTransit;
 using MassTransit.ExtensionsDependencyInjectionIntegration;
-using MassTransit.Serialization;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 
@@ -14,6 +14,11 @@ namespace Microsoft.Extensions.DependencyInjection
     /// </summary>
     public static class ServiceCollectionExtensions
     {
+        /// <summary>
+        /// Default episerver content type
+        /// </summary>
+        public static readonly ContentType ContentType = new("application/vnd.masstransit+episerver");
+
         /// <summary>
         /// Configure azure event provider
         /// </summary>
@@ -32,9 +37,8 @@ namespace Microsoft.Extensions.DependencyInjection
             }
 
             services.TryAddEnumerable(ServiceDescriptor.Singleton<IPostConfigureOptions<MassTransitEventProviderOptions>, MassTransitEventProviderOptionsConfigurer>());
-
+            services.AddSingleton<DataContractBinarySerializer>();
             services.AddMassTransit(x => configureBus?.Invoke(x));
-
             services.AddMassTransitHostedService();
             return services;
         }
@@ -50,10 +54,10 @@ namespace Microsoft.Extensions.DependencyInjection
                 var options = context.GetService<MassTransitEventProviderOptions>();
                 cfg.Host(new Uri(options.ConnectionString));
                 cfg.Message<EventMessage>(x => x.SetEntityName(options.ExchangeName));
-                cfg.ReceiveEndpoint(MassTransitEventProvider.UniqueServerName, e =>
+                cfg.ReceiveEndpoint(new TemporaryEndpointDefinition(prefetchCount:options.PrefetchCount), e =>
                 {
-                    e.ClearMessageDeserializers();
-                    e.UseDataContractBinarySerializer(context.GetService<EventsServiceKnownTypesLookup>());
+                    e.Consumer<SiteEventsConsumer>();
+                    e.UseDataContractBinarySerializer(context.GetService<DataContractBinarySerializer>());
                     e.AutoDelete = true;
                     e.PrefetchCount = options.PrefetchCount;
                     e.Durable = false;
@@ -62,8 +66,6 @@ namespace Microsoft.Extensions.DependencyInjection
                         x.Durable = true;
                         x.AutoDelete = false;
                     });
-                    e.UseConsumeFilter(typeof(SiteConsumeFilter<>), context);
-                    e.Consumer<SiteEventsConsumer>();
                 });
             });
         }
@@ -72,24 +74,22 @@ namespace Microsoft.Extensions.DependencyInjection
         /// Adds data contract binary serializer
         /// </summary>
         /// <param name="configurator">The configurator</param>
-        /// <param name="typesLookup">The types lookup</param>
-        public static void UseDataContractBinarySerializer(this IBusFactoryConfigurator configurator, EventsServiceKnownTypesLookup typesLookup)
+        /// <param name="dataContractBinarySerializer">The dataContractBinarySerializer</param>
+        public static void UseDataContractBinarySerializer(this IBusFactoryConfigurator configurator, DataContractBinarySerializer dataContractBinarySerializer)
         {
-            var serializer = new DataContractBinarySerializer(typesLookup);
-            configurator.AddMessageDeserializer(JsonMessageSerializer.JsonContentType, () => serializer);
-            configurator.SetMessageSerializer(() => serializer);
+            configurator.AddMessageDeserializer(ContentType, () => dataContractBinarySerializer);
+            configurator.SetMessageSerializer(() => dataContractBinarySerializer);
         }
 
         /// <summary>
         /// Adds data contract binary serializer
         /// </summary>
         /// <param name="configurator">The configurator</param>
-        /// <param name="typesLookup">The types lookup</param>
-        public static void UseDataContractBinarySerializer(this IReceiveEndpointConfigurator configurator, EventsServiceKnownTypesLookup typesLookup)
+        /// <param name="dataContractBinarySerializer">The dataContractBinarySerializer</param>
+        public static void UseDataContractBinarySerializer(this IReceiveEndpointConfigurator configurator, DataContractBinarySerializer dataContractBinarySerializer)
         {
-            var serializer = new DataContractBinarySerializer(typesLookup);
-            configurator.AddMessageDeserializer(JsonMessageSerializer.JsonContentType, () => serializer);
-            configurator.SetMessageSerializer(() => serializer);
+            configurator.AddMessageDeserializer(ContentType, () => dataContractBinarySerializer);
+            configurator.SetMessageSerializer(() => dataContractBinarySerializer);
         }
     }
 }
