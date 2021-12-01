@@ -22,9 +22,13 @@ namespace EPiServer.Events.MassTransit.Tests
     {
         private readonly InMemoryTestHarness _testHarness;
         private readonly ConsumerTestHarness<SiteEventsConsumer> _siteEventsConsumer;
+        private readonly DataContractBinarySerializer _dataContractBinarySerializer;
 
         public MassTransitEventProviderTests()
         {
+            var scanner = new Mock<ITypeScannerLookup>();
+            scanner.Setup(c => c.AllTypes).Returns(new List<Type> { typeof(StateMessage) });
+            _dataContractBinarySerializer = new DataContractBinarySerializer(new EventsServiceKnownTypesLookup(scanner.Object));
             var services = new ServiceCollection()
                 .AddSingleton(new Mock<ILogger<SiteEventsConsumer>>().Object)
                 .AddSingleton(new MassTransitEventProviderOptions
@@ -32,17 +36,14 @@ namespace EPiServer.Events.MassTransit.Tests
                     ExchangeName = "myexchange"
                 })
                 .AddSingleton<MassTransitEventProvider>()
+                .AddSingleton(_dataContractBinarySerializer)
                 .AddSingleton(new Mock<IPublishEndpoint>().Object);
             ServiceLocator.SetScopedServiceProvider(services.BuildServiceProvider());
-
-
-            var scanner = new Mock<ITypeScannerLookup>();
-            scanner.Setup(c => c.AllTypes).Returns(new List<Type> { typeof(StateMessage) });
             _testHarness = new InMemoryTestHarness();
             _testHarness.OnConfigureInMemoryBus += x =>
             {
                 x.ClearMessageDeserializers();
-                x.UseDataContractBinarySerializer(new DataContractBinarySerializer(new EventsServiceKnownTypesLookup(scanner.Object)));
+                x.UseDataContractBinarySerializer(_dataContractBinarySerializer);
             };
             _siteEventsConsumer = _testHarness.Consumer<SiteEventsConsumer>(MassTransitEventProvider.UniqueServerName);
             _testHarness.Start().GetAwaiter().GetResult();
