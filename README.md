@@ -1,5 +1,9 @@
 # EPiServer.Events.MassTransit
 
+## BETA
+
+This repo is currently in BETA until we get some more customers using this provider.  Once we have enough uses we will remove the BETA and have a production release.
+
 ## Introduction
 
 This provider allows for remote events processed.  By default this provider uses RabbitMQ as the default transport provider.  If you would like to use a different transport prvoider you will need to install the relevent nuget package and configure the transport in the last parameter of the AddMassTransitEventProvider extension method.  Please see the following link for more details https://masstransit-project.com/usage/transports/
@@ -22,7 +26,7 @@ You can set the connection string OptimizelyMassTransitEvents or you can configu
 
 OR
 
-`The Exchnage Name is optional and will be set the default which is shown here.`
+`The Exchange Name is optional and will be set the default which is shown here.`
 
 ```
 {
@@ -41,7 +45,6 @@ Next you will need to configure the event provider in the startup file.
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddCms()
-        .AddMassTransitEventProvider(null, x => x.AddRabbitMqTransport())
-        .AddCmsAspNetIdentity<ApplicationUser>();
+        .AddMassTransitEventProvider(null, x => x.AddRabbitMqTransport());
 }
 ```

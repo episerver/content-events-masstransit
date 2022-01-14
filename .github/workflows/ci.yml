@@ -27,8 +27,6 @@ jobs:
         env:
           NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
       
-      # Not needed yet
-      # - uses: ./.github/actions/install-sql-localdb
       - name: Restore
         run: dotnet restore
       - name: Build (Release version)
