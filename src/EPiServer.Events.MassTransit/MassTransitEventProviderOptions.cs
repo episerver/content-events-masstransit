@@ -1,6 +1,6 @@
-﻿using EPiServer.ServiceLocation;
+using EPiServer.ServiceLocation;
 
-namespace Optimizely.CMS.MassTransit.Events
+namespace EPiServer.Events.MassTransit
 {
     /// <summary>
     /// Options for configuring a <see cref="MassTransitEventProvider"/>.
@@ -19,24 +19,13 @@ namespace Optimizely.CMS.MassTransit.Events
         public string ExchangeName { get; set; }
 
         /// <summary>
-        /// The queue name that should be used. Must adhere to RabbitMQ limitations.
+        /// The pre-fetch count for processing message..
         /// </summary>
-        public string QueueName { get; set; }
-
-
-        /// <summary>
-        /// Indicates if the Service Bus Topic should be created with partitioning enabled.
-        /// </summary>
-        public bool EnablePartitioning { get; set; } = true;
-
-        /// <summary>
-        /// Indicates the size in MB of the Service Bus Topic
-        /// </summary>
-        public int TopicSize { get; set; } = 5120;
+        public ushort PrefetchCount { get; set; } = 100;
 
         /// <summary>
         /// Name of provider.
         /// </summary>
-        public string Name { get; set; } = "rabbitmq";
+        public string Name { get; set; } = "MassTransit";
     }
 }

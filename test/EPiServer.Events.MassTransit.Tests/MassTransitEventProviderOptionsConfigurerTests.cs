@@ -1,8 +1,9 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
 
-namespace Optimizely.CMS.MassTransit.Events.Tests
+namespace EPiServer.Events.MassTransit.Tests
 {
     public class MassTransitEventProviderOptionsConfigurerTests
     {
@@ -21,8 +22,15 @@ namespace Optimizely.CMS.MassTransit.Events.Tests
         public void PostConfigure_WhenConnectionStringIsNullAndExistsShouldSet()
         {
             _configuration.Setup(x => x.GetSection("ConnectionStrings")["OptimizelyMassTransitEvents"]).Returns("amqp://guest:guest@localhost:5672");
-            _subject.PostConfigure("test", _options);
+            _subject.PostConfigure(Options.DefaultName, _options);
             Assert.Equal("amqp://guest:guest@localhost:5672", _options.ConnectionString);
+        }
+
+        [Fact]
+        public void PostConfigure_WhenExchangeNameIsNullShouldSet()
+        {
+            _subject.PostConfigure(Options.DefaultName, _options);
+            Assert.Equal("optimizely.fanout.siteevents", _options.ExchangeName);
         }
     }
 }

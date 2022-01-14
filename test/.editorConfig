@@ -1,0 +1,16 @@
+##########################################
+# Test Project Settings
+##########################################
+
+# This file overrides some of the default rules that does not apply to Test projects.
+root = false
+
+[*.cs]
+
+dotnet_diagnostic.IDE0051.severity = suggestion # Remove unused private members - Used for testing
+
+dotnet_diagnostic.CA1707.severity = none        # Identifiers should not contain underscores - Test methods can have underscores
+dotnet_diagnostic.CA1507.severity = suggestion  # Use nameof to express symbol names - Common to name Theory parameters same as ArgumentNullException parameter
+dotnet_diagnostic.CA1711.severity = suggestion  # Identifiers should not have incorrect suffix - Test classes often use descriptive names that triggers this
+dotnet_diagnostic.CA1716.severity = suggestion  # Identifiers should not match keywords - Prioritize descriptive names in tests over this 
+

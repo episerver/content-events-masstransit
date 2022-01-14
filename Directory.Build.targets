@@ -1,0 +1,12 @@
+<Project>
+  <Import Project="$(BuildDirectory)license.targets" />
+
+  <!-- Workaround for SourceLink issues - https://github.com/dotnet/sourcelink/issues/572 -->
+  <PropertyGroup>
+    <TargetFrameworkMonikerAssemblyAttributesPath>$([System.IO.Path]::Combine('$(IntermediateOutputPath)','$(TargetFrameworkMoniker).AssemblyAttributes$(DefaultLanguageSourceExtension)'))</TargetFrameworkMonikerAssemblyAttributesPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedFiles Condition="Exists('$(GeneratedAssemblyInfoFile)')" Include="$(GeneratedAssemblyInfoFile)" />
+    <EmbeddedFiles Condition="Exists('$(GeneratedInternalsVisibleToFile)')" Include="$(GeneratedInternalsVisibleToFile)" />
+  </ItemGroup>
+</Project>

@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
-namespace Optimizely.CMS.MassTransit.Events
+namespace EPiServer.Events.MassTransit
 {
     internal class MassTransitEventProviderOptionsConfigurer : IPostConfigureOptions<MassTransitEventProviderOptions>
     {
@@ -14,6 +14,10 @@ namespace Optimizely.CMS.MassTransit.Events
 
         public void PostConfigure(string name, MassTransitEventProviderOptions options)
         {
+            if (name != Options.DefaultName)
+            {
+                return;
+            }
             //We want connection string to take precence if it exist
             var connectionString = _configuration.GetConnectionString("OptimizelyMassTransitEvents");
             if (!string.IsNullOrWhiteSpace(connectionString))
@@ -24,11 +28,6 @@ namespace Optimizely.CMS.MassTransit.Events
             if (string.IsNullOrWhiteSpace(options.ExchangeName))
             {
                 options.ExchangeName = "optimizely.fanout.siteevents";
-            }
-
-            if (string.IsNullOrWhiteSpace(options.QueueName))
-            {
-                options.QueueName = "optimizely.queues.siteevents";
             }
         }
     }

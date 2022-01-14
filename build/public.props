@@ -1,0 +1,40 @@
+<Project>
+
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <IsPackable>true</IsPackable>
+    <DebugType>embedded</DebugType>
+    <IncludeSymbols>false</IncludeSymbols>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <PackageOutputPath>$(ArtifactsDirectory)packages\</PackageOutputPath>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    <PackageTags>EPiServer MassTransit Events</PackageTags>
+    <Copyright>Copyright Optimizely $([System.DateTime]::Now.ToString(yyyy))</Copyright>
+    <Authors>Optimizely</Authors>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageProjectUrl>https://www.optimizely.com/products/dxp/</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/episerver/content-events-masstransit.git</RepositoryUrl>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageLicenseFile>license.txt</PackageLicenseFile>
+    <LicenseFiles>$(BuildDirectory)licenses\NO-THIRD-PARTY-LICENSES.txt</LicenseFiles>
+    <LicenseTemplate>$(BuildDirectory)licenses\LICENSE.txt.template</LicenseTemplate>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(BuildDirectory)icon.png" Pack="true" PackagePath="" Visible="false" />
+  </ItemGroup>
+
+  <!-- Make internal code visible to Test project and Moq -->
+  <ItemGroup>
+    <InternalsVisibleTo Include="$(AssemblyName).Tests" />
+    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+  </ItemGroup>
+
+  <!-- Setup SourceLink -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="all"/>
+  </ItemGroup>
+
+</Project>
