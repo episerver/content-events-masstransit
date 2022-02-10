@@ -6,6 +6,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using EPiServer.Events.Clients;
 using EPiServer.Events.Clients.Internal;
 using EPiServer.Framework.TypeScanner;
 using EPiServer.ServiceLocation;
@@ -37,7 +38,8 @@ namespace EPiServer.Events.MassTransit.Tests
                 })
                 .AddSingleton<MassTransitEventProvider>()
                 .AddSingleton(_dataContractBinarySerializer)
-                .AddSingleton(new Mock<IPublishEndpoint>().Object);
+                .AddSingleton(new Mock<IPublishEndpoint>().Object)
+                .AddSingleton(new Mock<IEventRegistry>().Object);
             ServiceLocator.SetScopedServiceProvider(services.BuildServiceProvider());
             _testHarness = new InMemoryTestHarness();
             _testHarness.OnConfigureInMemoryBus += x =>
@@ -45,7 +47,7 @@ namespace EPiServer.Events.MassTransit.Tests
                 x.ClearMessageDeserializers();
                 x.UseDataContractBinarySerializer(_dataContractBinarySerializer);
             };
-            _siteEventsConsumer = _testHarness.Consumer<SiteEventsConsumer>(() => new Mock<SiteEventsConsumer>().Object, MassTransitEventProvider.UniqueServerName);
+            _siteEventsConsumer = _testHarness.Consumer<SiteEventsConsumer>(() => new SiteEventsConsumer(new Mock<ILogger<SiteEventsConsumer>>().Object, ServiceLocator.Current.GetInstance<MassTransitEventProvider>()), MassTransitEventProvider.UniqueServerName);
             _testHarness.Start().GetAwaiter().GetResult();
         }
 
