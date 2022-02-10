@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using EPiServer.Events.Clients;
 using MassTransit;
 
 namespace EPiServer.Events.MassTransit
@@ -11,6 +12,8 @@ namespace EPiServer.Events.MassTransit
     {
         private readonly IPublishEndpoint _publishEndpoint;
         private readonly DataContractBinarySerializer _dataContractBinarySerializer;
+        private readonly IEventRegistry _eventRegistry;
+        private readonly Guid _raiserId = Guid.NewGuid();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MassTransitEventProvider"/> class.
@@ -18,13 +21,16 @@ namespace EPiServer.Events.MassTransit
         /// <param name="options">The options</param>
         /// <param name="publishEndpoint">The publish endpoint.</param>
         /// <param name="dataContractBinarySerializer">The serializer</param>
+        /// <param name="eventRegistry"></param>
         public MassTransitEventProvider(MassTransitEventProviderOptions options,
             IPublishEndpoint publishEndpoint,
-            DataContractBinarySerializer dataContractBinarySerializer)
+            DataContractBinarySerializer dataContractBinarySerializer,
+            IEventRegistry eventRegistry)
         {
             Name = options.Name;
             _publishEndpoint = publishEndpoint;
             _dataContractBinarySerializer = dataContractBinarySerializer;
+            _eventRegistry = eventRegistry;
         }
 
         /// <summary>
@@ -39,12 +45,15 @@ namespace EPiServer.Events.MassTransit
         /// Method to raise OnMessageReeceived event.
         /// </summary>
         /// <param name="messageEventArgs">The message event args.</param>
-        public void RaiseOnMessageReceived(EventMessageEventArgs messageEventArgs) => OnMessageReceived(messageEventArgs);
+        public void RaiseOnMessageReceived(EventMessageEventArgs messageEventArgs)
+        {
+            var ev = _eventRegistry.Get(messageEventArgs.Message.EventId);
+            ev?.Raise(_raiserId, messageEventArgs.Message.Parameter, EventRaiseOption.RaiseSite);
+        }
 
         /// <inheritdoc/>
         public override Task InitializeAsync()
         {
-
             return Task.CompletedTask;
         }
 

@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using EPiServer.ServiceLocation;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 
@@ -17,10 +16,13 @@ namespace EPiServer.Events.MassTransit
         /// <summary>
         /// Initializes a new instance of the <see cref="SiteEventsConsumer"/> class.
         /// </summary>
-        public SiteEventsConsumer()
+        /// <param name="logger"></param>
+        /// <param name="massTransitEventProvider"></param>
+        public SiteEventsConsumer(ILogger<SiteEventsConsumer> logger,
+            MassTransitEventProvider massTransitEventProvider)
         {
-            _logger = ServiceLocator.Current.GetInstance<ILogger<SiteEventsConsumer>>();
-            _massTransitEventProvider = ServiceLocator.Current.GetInstance<MassTransitEventProvider>();
+            _logger = logger;
+            _massTransitEventProvider = massTransitEventProvider;
         }
 
         /// <summary>
@@ -35,7 +37,7 @@ namespace EPiServer.Events.MassTransit
                 if (context.Headers.Get<string>("AppId") != MassTransitEventProvider.UniqueServerName)
                 {
                     _massTransitEventProvider.RaiseOnMessageReceived(new EventMessageEventArgs(context.Message));
-                    await Task.CompletedTask.ConfigureAwait(false);
+                    await Task.CompletedTask.ConfigureAwait(true);
                 }
             }
             catch (Exception e)

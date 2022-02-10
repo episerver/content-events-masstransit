@@ -30,7 +30,7 @@ namespace Microsoft.Extensions.DependencyInjection
             Action<IServiceCollectionBusConfigurator> configureBus = null)
         {
             services.AddEventProvider<MassTransitEventProvider>();
-
+            services.AddSingleton<SiteEventsConsumer>();
             if (configureOptions is not null)
             {
                 services.Configure(configureOptions);
@@ -56,7 +56,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 cfg.Message<EventMessage>(x => x.SetEntityName(options.ExchangeName));
                 cfg.ReceiveEndpoint(new TemporaryEndpointDefinition(prefetchCount:options.PrefetchCount), e =>
                 {
-                    e.Consumer<SiteEventsConsumer>();
+                    e.Consumer(() => context.GetService<SiteEventsConsumer>());
                     e.UseDataContractBinarySerializer(context.GetService<DataContractBinarySerializer>());
                     e.AutoDelete = true;
                     e.PrefetchCount = options.PrefetchCount;

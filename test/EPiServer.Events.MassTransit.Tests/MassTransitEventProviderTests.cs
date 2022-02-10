@@ -45,7 +45,7 @@ namespace EPiServer.Events.MassTransit.Tests
                 x.ClearMessageDeserializers();
                 x.UseDataContractBinarySerializer(_dataContractBinarySerializer);
             };
-            _siteEventsConsumer = _testHarness.Consumer<SiteEventsConsumer>(MassTransitEventProvider.UniqueServerName);
+            _siteEventsConsumer = _testHarness.Consumer<SiteEventsConsumer>(() => new Mock<SiteEventsConsumer>().Object, MassTransitEventProvider.UniqueServerName);
             _testHarness.Start().GetAwaiter().GetResult();
         }
 
