@@ -1,9 +1,5 @@
 # EPiServer.Events.MassTransit
 
-## BETA
-
-This repo is currently in BETA until we get some more customers using this provider.  Once we have enough uses we will remove the BETA and have a production release.
-
 ## Introduction
 
 This provider allows for remote events processed.  By default this provider uses RabbitMQ as the default transport provider.  If you would like to use a different transport prvoider you will need to install the relevent nuget package and configure the transport in the last parameter of the AddMassTransitEventProvider extension method.  Please see the following link for more details https://masstransit-project.com/usage/transports/
@@ -18,7 +14,7 @@ You can set the connection string OptimizelyMassTransitEvents or you can configu
 ```
 {
     "ConnectionStrings": {
-        "EPiServerDB": "Server=.;Database=databse.cms;User Id=user;Password=password;MultipleActiveResultSets=True",
+        "EPiServerDB": "Server=.;Database=databse.cms;User Id=user;Password=password;",
         "OptimizelyMassTransitEvents": "amqp://guest:guest@localhost:5672"
     }
 }
