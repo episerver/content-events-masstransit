@@ -2,7 +2,7 @@
   <Import Project="build\version.props" />
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFrameworks>net5.0;net6.0</TargetFrameworks>
     <LangVersion>9.0</LangVersion>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarnOnPackingNonPackableProject>false</WarnOnPackingNonPackableProject>
