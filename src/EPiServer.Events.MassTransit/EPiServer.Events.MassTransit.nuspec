@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>EPiServer.Events.MassTransit</id>
+    <version>$Version$</version>
+    <title>Optimizely</title>
+    <authors>Optimizely</authors>
+    <icon>icon.png</icon>
+    <owners>Optimizely</owners>
+    <license type="file">license.txt</license>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>EPiServer MassTransit Events</description>
+    <copyright>Copyright Optimizely $Year$</copyright>
+    <repository type="git" url="https://github.com/episerver/content-events-masstransit.git"></repository>
+    <dependencies>
+      <group targetFramework="net5.0">
+        <dependency id="EPiServer.CMS.AspNetCore" version="[12.4.0, 13)" />
+        <dependency id="MassTransit.AspNetCore" version="[7.3.1, 8)" />
+        <dependency id="MassTransit.Extensions.DependencyInjection" version="[7.3.1, 8)" />
+        <dependency id="MassTransit.RabbitMQ" version="[7.3.1, 8)" />
+      </group>
+      <group targetFramework="net6.0">
+        <dependency id="EPiServer.CMS.AspNetCore" version="[12.4.0, 13)" />
+        <dependency id="MassTransit.AspNetCore" version="[7.3.1, 8)" />
+        <dependency id="MassTransit.Extensions.DependencyInjection" version="[7.3.1, 8)" />
+        <dependency id="MassTransit.RabbitMQ" version="[7.3.1, 8)" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="build\icon.png" target="" />
+    <file src="src\EPiServer.Events.MassTransit\license.txt" target="" />
+    <file src="src\EPiServer.Events.MassTransit\bin\$Configuration$\net5.0\EPiServer.Events.MassTransit.dll" target="lib\net5.0" />
+    <file src="src\EPiServer.Events.MassTransit\bin\$Configuration$\net6.0\EPiServer.Events.MassTransit.dll" target="lib\net6.0" />
+  </files>
+</package>

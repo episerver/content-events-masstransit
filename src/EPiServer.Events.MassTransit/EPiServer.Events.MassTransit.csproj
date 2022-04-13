@@ -1,13 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="$(BuildDirectory)public.props" />
+  <Import Project="$(BuildDirectory)nuspec.props" />
   <PropertyGroup>
     <Description>Mass transit event provider for Optimizely Content Cloud</Description>
     <TargetFrameworks>net5.0;net6.0</TargetFrameworks>
+    <NuspecFile>EPiServer.Events.MassTransit.nuspec</NuspecFile>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="EPiServer.CMS.AspNetCore" Version="[12.4.0, 13)" />
-    <PackageReference Include="MassTransit.AspNetCore" Version="[7.2.3, 8)" />
-    <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="[7.2.3, 8)" />
-    <PackageReference Include="MassTransit.RabbitMQ" Version="[7.2.3, 8)" />
+    <PackageReference Include="MassTransit.AspNetCore" Version="7.3.1" />
+    <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.3.1" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="7.3.1" />
   </ItemGroup>
 </Project>
