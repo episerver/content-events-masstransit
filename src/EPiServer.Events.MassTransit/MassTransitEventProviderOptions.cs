@@ -5,7 +5,7 @@ namespace EPiServer.Events.MassTransit
     /// <summary>
     /// Options for configuring a <see cref="MassTransitEventProvider"/>.
     /// </summary>
-    [Options(ConfigurationSection = ConfigurationSectionConstants.Cms)]
+    [Options]
     public class MassTransitEventProviderOptions
     {
         /// <summary>
